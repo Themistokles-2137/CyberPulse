@@ -68,9 +68,13 @@
                     <div>
                         <h6 class="text-muted">Critical/High</h6>
                         <h2 class="mb-0">
-                            {% set critical_high = severity_counts|selectattr('0', 'equalto', 'Critical')|sum(attribute='1', default=0) + 
-                                               severity_counts|selectattr('0', 'equalto', 'High')|sum(attribute='1', default=0) %}
-                            {{ critical_high }}
+                            {% set critical_count = 0 %}
+                            {% for severity in severity_counts %}
+                                {% if severity[0] == 'Critical' or severity[0] == 'High' %}
+                                    {% set critical_count = critical_count + severity[1] %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ critical_count }}
                         </h2>
                     </div>
                     <div class="rounded-circle bg-danger bg-opacity-10 p-3">
