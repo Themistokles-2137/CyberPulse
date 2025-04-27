@@ -1,5 +1,6 @@
 import os
 import logging
+from markupsafe import Markup, escape
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -35,6 +36,15 @@ db.init_app(app)
 from routes.main_routes import main
 from routes.dashboard_routes import dashboard
 from routes.api_routes import api
+
+# Custom Jinja2 filters
+@app.template_filter('nl2br')
+def nl2br(value):
+    """Convert newlines to HTML line breaks."""
+    if value:
+        value = str(value)
+        return Markup(escape(value).replace('\n', '<br>\n'))
+    return ''
 
 # Register blueprints
 app.register_blueprint(main)
